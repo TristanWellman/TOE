@@ -15,8 +15,10 @@ compile_clang :: () {
 		COMPILER = "/opt/homebrew/opt/llvm/bin/clang";
 	}
 
-	run_command(COMPILER, "--target=ppc64", "-mabi=elfv2", "-D'__error=__errno_location'",
-		"-c", "TOE.ppc64.bc", "-o", tprint("%%", TBIN, ".ppc64.o"));
+	run_command(COMPILER, "--target=ppc64", "-mabi=elfv2",
+		"-c", "TOE.bc", "-o", tprint("%%", TBIN, ".ppc64.o"));
+	run_command(COMPILER, "--target=mipsel",
+		"-c", "TOE.bc", "-o", tprint("%%", TBIN, ".mipsel.o"));
 }
 
 wait_for_compiler :: () {
@@ -28,8 +30,6 @@ wait_for_compiler :: () {
 }
 
 #run {
-
-
 	w := compiler_create_workspace();
 	assert(w>0);
 
@@ -53,7 +53,6 @@ wait_for_compiler :: () {
 	tOptions.llvm_options.output_bitcode = true;
 	tOptions.os_target = .LINUX;
 	tOptions.cpu_target = .ARM64;
-	tOptions.output_executable_name = tprint("%.ppc64", TBIN);
 	set_build_options(tOptions, w);
 	compiler_begin_intercept(w);
 	add_build_file(TFILE, w);
