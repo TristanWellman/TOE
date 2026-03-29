@@ -1,0 +1,6 @@
+.build
+*.o
+*.bc
+TOE
+*.dSYM
+test.c
